@@ -19,8 +19,8 @@ declare type LoginType = {
 }
 
 declare type CreateEventType = {
-  title: string
-  description: string
+  title?: string
+  description?: string
   date: Date | string
   location: string
 }
@@ -31,4 +31,12 @@ declare type EventUpdateType = {
   description?: string
   date?: Date | string
   location?: string
+}
+
+export type EventFormValues = {
+  id?: string // Optional for new events, required for updates
+  title: string
+  description: string
+  date: string // ISO date string (e.g., '2024-08-23')
+  location: string
 }

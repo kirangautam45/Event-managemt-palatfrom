@@ -1,10 +1,6 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import AuthForm from '@/components/AuthForm'
-import { getServerSession } from 'next-auth'
+import AuthForm from "@/components/AuthForm"
 
-const Login = async() => {
-  const session = await getServerSession(authOptions)
-  console.log('Server-side session:', session)
+const Login = () => {
   return (
     <section className='flex-center size-full max-sm:px-6'>
       <AuthForm type='sign-in' />

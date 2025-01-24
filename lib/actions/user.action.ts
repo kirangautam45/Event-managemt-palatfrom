@@ -4,7 +4,7 @@ import { UserRole } from '@prisma/client'
 import { prisma } from '../prisma'
 import bcrypt from 'bcryptjs'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '../auth'
 
 export async function getCurrentUser() {
   try {
