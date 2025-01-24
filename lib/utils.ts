@@ -14,7 +14,7 @@ const passwordRegexes = {
   special: /[!@#$%^&*()]/,
 }
 
-export const authFormSchema = () =>
+export const authFormSchema = (p0: string) =>
   z.object({
     // sign up
     role: z.nativeEnum(UserRole).optional(),

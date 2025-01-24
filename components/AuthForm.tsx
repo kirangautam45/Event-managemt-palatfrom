@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
-import { Form } from '@/components/ui/form'
+import { Form, FormLabel } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import CustomInput from './CustomInput' // Custom input component
 import { authFormSchema } from '@/lib/utils' // Adjust schema for validation
@@ -108,7 +108,7 @@ const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
             label='Password'
             placeholder='Enter your password'
           />
-          {type === 'sign-up' && (
+          {/* {type === 'sign-up' && (
             <Controller
               control={form.control}
               name='role'
@@ -129,6 +129,33 @@ const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
                 </Select>
               )}
             />
+          )} */}
+          {type === 'sign-up' && (
+            <div className='flex flex-col gap-1.5'>
+              <FormLabel className='text-14 w-full max-w-[280px] font-medium text-gray-700'>
+                Role
+              </FormLabel>
+              <Controller
+                control={form.control}
+                name='role'
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select a role' />
+                    </SelectTrigger>
+                    <SelectContent className='bg-white z-30'>
+                      <SelectGroup className='z-10'>
+                        <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                        <SelectItem value={UserRole.USER}>User</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
           )}
 
           <div className='flex flex-col gap-4'>
