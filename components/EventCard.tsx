@@ -28,10 +28,18 @@ const EventCard: React.FC<EventCardProps> = ({ event, onEdit, onDelete }) => {
         <p>{event.location}</p>
       </CardContent>
       <CardFooter className='space-x-2'>
-        <Button variant='secondary' onClick={() => onEdit(event)}    className='text-16 rounded-lg border  font-semibold text-white bg-blue-500 '>
+        <Button
+          variant='secondary'
+          onClick={() => onEdit(event)}
+          className='text-16 rounded-lg border  font-semibold text-white bg-blue-500 '
+        >
           Edit
         </Button>
-        <Button variant='destructive' onClick={() => onDelete(event.id!)}    className='text-16 rounded-lg border  font-semibold text-white bg-red-500 '>
+        <Button
+          variant='destructive'
+          onClick={() => onDelete(event.id!)}
+          className='text-16 rounded-lg border  font-semibold text-white bg-red-500 '
+        >
           Delete
         </Button>
       </CardFooter>
