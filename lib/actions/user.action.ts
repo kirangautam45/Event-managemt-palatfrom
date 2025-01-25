@@ -10,6 +10,8 @@ export async function getCurrentUser() {
   try {
     const session = await getServerSession(authOptions)
 
+    console.log(session, 'getCurrentUser')
+
     if (!session) {
       console.log('No session found')
       return null

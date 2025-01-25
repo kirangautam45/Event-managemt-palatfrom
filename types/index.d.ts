@@ -9,7 +9,6 @@ declare type SignUpType = {
 declare type HearerProps = {
   user: {
     email: string
-    role: UserRole
   }
 }
 
@@ -40,3 +39,15 @@ export type EventFormValues = {
   date: string // ISO date string (e.g., '2024-08-23')
   location: string
 }
+
+export interface getFormValues {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  title: string
+  description: string
+  date: Date
+  location: string
+  userId: string
+}
+

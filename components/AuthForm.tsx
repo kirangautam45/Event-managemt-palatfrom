@@ -66,7 +66,7 @@ const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
         })
 
         if (response?.error) {
-          alert('Sign-in failed, please try again')
+          alert(`Sign-in failed, please try again ${response?.error}`)
         } else {
           router.push('/') // Redirect after successful sign-in
         }

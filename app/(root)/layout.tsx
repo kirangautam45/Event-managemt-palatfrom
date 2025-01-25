@@ -1,45 +1,42 @@
 import Header from '@/components/Header'
-import Provider from '@/components/Provider'
-import { getCurrentUser } from '@/lib/actions/user.action'
 import { authOptions } from '@/lib/auth'
-import { UserRole } from '@prisma/client'
+import { useSession } from 'next-auth/react'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
-import { getSession } from 'next-auth/react'
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const sessions = await getSession()
-  console.log('Session:', sessions)
-  const session = await getServerSession(authOptions)
-  const loggedIn = await getCurrentUser()
+  const session = getServerSession(authOptions)
 
-  console.log(loggedIn, 'loggedIn')
-  console.log(session, 'session')
+  console.log('Client-side session:', session)
 
-  const user = {
-    email: loggedIn?.email ?? '',
-
-    role: loggedIn?.role ?? UserRole.USER,
+  // If there's no session, redirect the user to login
+  if (!session) {
+    redirect('/login')
   }
 
-    if (!loggedIn) redirect('/login')
+  console.log(session, 'session')
+  // Get the user info from the session
+  // const user = {
+  //   email: session.user?.email ?? '', // Ensure that email exists
+  //   // Use role from session or default to USER
+  // }
+
+  // console.log(user, 'layout user')
 
   return (
     <main className='flex h-screen w-full font-inter'>
-      <Provider session={session}>
-        <div className='flex size-full flex-col'>
-          <div className='root-layout'>
-            <div>
-              <Header user={user} />
-            </div>
+      <div className='flex size-full flex-col'>
+        <div className='root-layout'>
+          <div>
+            <Header />
           </div>
-          {children}
         </div>
-      </Provider>
+        {children}
+      </div>
     </main>
   )
 }

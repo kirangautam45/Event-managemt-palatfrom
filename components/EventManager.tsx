@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import {
-  EventFormValues,
   getEventsAction,
   createEventAction,
   updateEventAction,
@@ -10,6 +9,7 @@ import {
 } from '@/lib/actions/event.action'
 import EventForm from './EventForm'
 import EventList from './EventList'
+import { EventFormValues } from '@/types'
 
 const EventManager = () => {
   const [events, setEvents] = useState<EventFormValues[]>([])
@@ -74,7 +74,7 @@ const EventManager = () => {
   return (
     <div className='p-6 flex items-center flex-col'>
       <h1 className='text-2xl font-bold mb-4'>Event Manager</h1>
-      <EventForm onSubmit={handleCreateOrUpdate} editingEvent={editingEvent} />
+      <EventForm onSubmit={handleCreateOrUpdate} initialValues={editingEvent} />
       <EventList
         events={events}
         onEdit={setEditingEvent}

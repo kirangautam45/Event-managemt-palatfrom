@@ -13,7 +13,7 @@ export async function createEventAction(data: CreateEventType) {
     throw new Error('Unauthorized: Please log in.')
   }
 
-  const { title, description, date, location } = data
+  const { title = '', description = '', date, location } = data
 
   return prisma.event.create({
     data: {

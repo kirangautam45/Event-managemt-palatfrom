@@ -25,10 +25,10 @@ const eventSchema = z.object({
 
 interface EventFormProps {
   onSubmit: (data: EventFormValues) => void
-  editingEvent?: EventFormValues | null
+  initialValues?: EventFormValues | null
 }
 
-const EventForm: React.FC<EventFormProps> = ({ onSubmit, editingEvent }) => {
+const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialValues }) => {
   const {
     control,
     handleSubmit,
@@ -36,7 +36,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, editingEvent }) => {
     formState: { errors },
   } = useForm<EventFormValues>({
     resolver: zodResolver(eventSchema),
-    defaultValues: editingEvent || {
+    defaultValues: initialValues || {
       id: '',
       title: '',
       description: '',
@@ -48,7 +48,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, editingEvent }) => {
   return (
     <Card className='mb-6 w-6/12'>
       <CardHeader>
-        <CardTitle>{editingEvent ? 'Update Event' : 'Create Event'}</CardTitle>
+        <CardTitle>{initialValues ? 'Update Event' : 'Create Event'}</CardTitle>
       </CardHeader>
       <form
         onSubmit={handleSubmit((data) => {
@@ -100,7 +100,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, editingEvent }) => {
             type='submit'
             className='text-16 rounded-lg border  font-semibold text-white bg-blue-500 '
           >
-            {editingEvent ? 'Update Event' : 'Create Event'}
+            {initialValues ? 'Update Event' : 'Create Event'}
           </Button>
         </CardFooter>
       </form>
