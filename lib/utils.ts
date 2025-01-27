@@ -40,10 +40,13 @@ export const authFormSchema = () =>
 
 export const EventSchema = () =>
   z.object({
+    id: z.string().optional(),
     title: z.string().min(3, 'Title must be at least 3 characters'),
     description: z
       .string()
       .min(10, 'Description must be at least 10 characters'),
-    date: z.date().refine((val) => !isNaN(val.getTime()), 'Invalid date'),
+    date: z.string().refine((val) => !isNaN(Date.parse(val)), 'Invalid date'),
     location: z.string().min(3, 'Location must be at least 3 characters'),
   })
+
+ 

@@ -1,6 +1,6 @@
 'use client'
 
-import { EventFormValues } from '@/lib/actions/event.action'
+import { EventFormValues } from '@/types'
 import EventCard from './EventCard'
 
 interface EventListProps {

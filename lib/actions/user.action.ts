@@ -1,24 +1,20 @@
 'use server'
 
 import { UserRole } from '@prisma/client'
-import { prisma } from '../prisma'
+
 import bcrypt from 'bcryptjs'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth'
+import { prisma } from '../prisma'
 
 export async function getCurrentUser() {
   try {
     const session = await getServerSession(authOptions)
 
-    console.log(session, 'getCurrentUser')
+    console.log('Session fetched:', session)
 
-    if (!session) {
-      console.log('No session found')
-      return null
-    }
-
-    if (!session.user?.email) {
-      console.log('No user email in session')
+    if (!session?.user?.email) {
+      console.error('No authenticated session found')
       return null
     }
 
@@ -28,9 +24,15 @@ export async function getCurrentUser() {
         id: true,
         email: true,
         role: true,
+        createdAt: true,
         events: true,
       },
     })
+
+    if (!user) {
+      console.error(`No user found for email: ${session.user.email}`)
+      return null
+    }
 
     return user
   } catch (error) {
@@ -38,6 +40,9 @@ export async function getCurrentUser() {
     return null
   }
 }
+export type CurrentUser = NonNullable<
+  Awaited<ReturnType<typeof getCurrentUser>>
+>
 
 export const signUp = async ({
   email,

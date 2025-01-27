@@ -9,6 +9,8 @@ import { getCurrentUser } from './user.action'
 // Create an event
 export async function createEventAction(data: CreateEventType) {
   const user = await getCurrentUser()
+
+  console.log('User email:', user?.email, user?.id)
   if (!user) {
     throw new Error('Unauthorized: Please log in.')
   }

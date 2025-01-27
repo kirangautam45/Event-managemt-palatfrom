@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 // assuming custom actions to handle Prisma logic
+import { signIn as nextAuthSignIn } from 'next-auth/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
@@ -20,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select'
-import { signIn, signUp } from '@/lib/actions/user.action'
+import { signUp } from '@/lib/actions/user.action'
 import { UserRole } from '@prisma/client'
 
 const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
@@ -40,6 +41,43 @@ const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
     },
   })
 
+  // const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  //   setIsLoading(true)
+
+  //   try {
+  //     if (type === 'sign-up') {
+  //       // Handle sign-up
+  //       const newUser = await signUp({
+  //         email: data.email,
+  //         role: data.role || UserRole.USER,
+  //         password: data.password,
+  //       })
+
+  //       console.log(newUser, 'newUser')
+  //       if (newUser) {
+  //         router.push('/') // Redirect after successful sign-up
+  //       }
+  //     }
+
+  //     if (type === 'sign-in') {
+  //       // Handle sign-in with NextAuth
+  //       const response = await signIn({
+  //         email: data.email,
+  //         password: data.password,
+  //       })
+
+  //       if (response?.error) {
+  //         alert(`Sign-in failed, please try again ${response?.error}`)
+  //       } else {
+  //         router.push('/') // Redirect after successful sign-in
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
 
@@ -52,27 +90,41 @@ const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
           password: data.password,
         })
 
-        console.log(newUser, 'newUser')
-        if (newUser) {
-          router.push('/') // Redirect after successful sign-up
+        if (newUser.success) {
+          // After successful signup, automatically sign in
+          const result = await nextAuthSignIn('credentials', {
+            email: data.email,
+            password: data.password,
+            redirect: false,
+          })
+
+          if (result?.error) {
+            throw new Error(result.error)
+          }
+
+          router.push('/')
+          router.refresh()
         }
       }
 
       if (type === 'sign-in') {
         // Handle sign-in with NextAuth
-        const response = await signIn({
+        const result = await nextAuthSignIn('credentials', {
           email: data.email,
           password: data.password,
+          redirect: false,
         })
 
-        if (response?.error) {
-          alert(`Sign-in failed, please try again ${response?.error}`)
-        } else {
-          router.push('/') // Redirect after successful sign-in
+        if (result?.error) {
+          throw new Error(result.error)
         }
+
+        router.push('/')
+        router.refresh()
       }
     } catch (error) {
-      console.log(error)
+      console.error('Authentication error:', error)
+      alert(error instanceof Error ? error.message : 'Authentication failed')
     } finally {
       setIsLoading(false)
     }
@@ -108,28 +160,6 @@ const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
             label='Password'
             placeholder='Enter your password'
           />
-          {/* {type === 'sign-up' && (
-            <Controller
-              control={form.control}
-              name='role'
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder='Select a role' />
-                  </SelectTrigger>
-                  <SelectContent className='bg-white z-30'>
-                    <SelectGroup className='z-10'>
-                      <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                      <SelectItem value={UserRole.USER}>User</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          )} */}
           {type === 'sign-up' && (
             <div className='flex flex-col gap-1.5'>
               <FormLabel className='text-14 w-full max-w-[280px] font-medium text-gray-700'>

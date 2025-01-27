@@ -4,6 +4,21 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { Adapter } from 'next-auth/adapters'
+import { UserRole } from '@prisma/client'
+declare module 'next-auth' {
+  interface User {
+    id: string
+    email: string
+    role: UserRole // Import UserRole from @prisma/client
+  }
+
+  interface Session {
+    user: {
+      id: string
+      email: string
+    }
+  }
+}
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma) as unknown as Adapter,
@@ -51,24 +66,29 @@ export const authOptions: AuthOptions = {
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 1* 24 * 60 * 60, // 1 days
   },
+  pages: {
+    signIn: '/login',  // Specify your custom login page
+  },
+  debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
-      // Log the user and token during the jwt callback for debugging
       console.log('JWT callback, user:', user, 'token:', token)
       if (user) {
         token.id = user.id
         token.email = user.email
+        token.role = user.role // Add role if needed
       }
       return token
     },
     async session({ session, token }) {
-      // Log session and token during the session callback
       console.log('Session callback, session:', session, 'token:', token)
       if (token) {
         session.user = {
-          email: token.email,
+          id: token.id as string,
+          email: token.email as string,
         }
       }
       return session
