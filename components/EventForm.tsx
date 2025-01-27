@@ -62,7 +62,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialValues }) => {
   }
 
   return (
-    <Card className='mb-6 w-6/12'>
+    <Card className='mb-6 lg:w-6/12 w-full'>
       <CardHeader>
         <CardTitle>{initialValues ? 'Update Event' : 'Create Event'}</CardTitle>
       </CardHeader>

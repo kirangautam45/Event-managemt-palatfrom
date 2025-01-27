@@ -45,8 +45,12 @@ export const EventSchema = () =>
     description: z
       .string()
       .min(10, 'Description must be at least 10 characters'),
-    date: z.string().refine((val) => !isNaN(Date.parse(val)), 'Invalid date'),
+    date: z
+      .string()
+      .refine((val) => !isNaN(Date.parse(val)), 'Invalid date')
+      .refine(
+        (val) => new Date(val) >= new Date(new Date().toDateString()),
+        'Date cannot be in the past'
+      ),
     location: z.string().min(3, 'Location must be at least 3 characters'),
   })
-
- 
