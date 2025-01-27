@@ -11,8 +11,6 @@ export async function getCurrentUser() {
   try {
     const session = await getServerSession(authOptions)
 
-    console.log('Session fetched:', session)
-
     if (!session?.user?.email) {
       console.error('No authenticated session found')
       return null
@@ -34,7 +32,6 @@ export async function getCurrentUser() {
       return null
     }
 
-    console.log(user, 'get user Details')
     return user
   } catch (error) {
     console.error('Error fetching current user:', error)

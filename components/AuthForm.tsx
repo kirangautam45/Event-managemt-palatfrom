@@ -41,43 +41,6 @@ const AuthForm = ({ type }: { type: 'sign-in' | 'sign-up' }) => {
     },
   })
 
-  // const onSubmit = async (data: z.infer<typeof formSchema>) => {
-  //   setIsLoading(true)
-
-  //   try {
-  //     if (type === 'sign-up') {
-  //       // Handle sign-up
-  //       const newUser = await signUp({
-  //         email: data.email,
-  //         role: data.role || UserRole.USER,
-  //         password: data.password,
-  //       })
-
-  //       console.log(newUser, 'newUser')
-  //       if (newUser) {
-  //         router.push('/') // Redirect after successful sign-up
-  //       }
-  //     }
-
-  //     if (type === 'sign-in') {
-  //       // Handle sign-in with NextAuth
-  //       const response = await signIn({
-  //         email: data.email,
-  //         password: data.password,
-  //       })
-
-  //       if (response?.error) {
-  //         alert(`Sign-in failed, please try again ${response?.error}`)
-  //       } else {
-  //         router.push('/') // Redirect after successful sign-in
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   } finally {
-  //     setIsLoading(false)
-  //   }
-  // }
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
 

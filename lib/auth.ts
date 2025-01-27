@@ -51,7 +51,6 @@ export const authOptions: AuthOptions = {
             throw new Error('Invalid password')
           }
 
-          console.log('Authorization successful for user:', user.email)
           return {
             id: user.id,
             email: user.email,
@@ -66,16 +65,15 @@ export const authOptions: AuthOptions = {
   ],
   session: {
     strategy: 'jwt',
-    maxAge: 1* 24 * 60 * 60, // 1 days
+    maxAge: 1 * 24 * 60 * 60, // 1 days
   },
   pages: {
-    signIn: '/login',  // Specify your custom login page
+    signIn: '/login', // Specify your custom login page
   },
   debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
-      console.log('JWT callback, user:', user, 'token:', token)
       if (user) {
         token.id = user.id
         token.email = user.email
@@ -84,7 +82,6 @@ export const authOptions: AuthOptions = {
       return token
     },
     async session({ session, token }) {
-      console.log('Session callback, session:', session, 'token:', token)
       if (token) {
         session.user = {
           id: token.id as string,
