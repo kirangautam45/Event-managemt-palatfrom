@@ -1,6 +1,5 @@
 'use client'
 
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
@@ -15,6 +14,7 @@ import {
 } from '@/components/ui/card'
 import { EventFormValues } from '@/types'
 import { EventSchema } from '@/lib/utils'
+import { useEffect } from 'react'
 
 interface EventFormProps {
   onSubmit: (data: EventFormValues) => void
@@ -29,7 +29,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialValues }) => {
     formState: { errors },
   } = useForm<EventFormValues>({
     resolver: zodResolver(EventSchema()),
-    defaultValues: initialValues || {
+    defaultValues: {
       id: '',
       title: '',
       description: '',
@@ -38,17 +38,35 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialValues }) => {
     },
   })
 
+  // Reset form when initialValues change
+  useEffect(() => {
+    if (initialValues) {
+      // Ensure date is in the correct format (YYYY-MM-DD)
+      const formattedDate = initialValues.date
+        ? new Date(initialValues.date).toISOString().split('T')[0]
+        : ''
+
+      reset({
+        ...initialValues,
+        date: formattedDate,
+      })
+    }
+  }, [initialValues, reset])
+
+  const handleFormSubmit = (data: EventFormValues) => {
+    onSubmit({
+      ...data,
+      id: initialValues?.id || data.id, // Preserve the ID when updating
+    })
+    reset()
+  }
+
   return (
     <Card className='mb-6 w-6/12'>
       <CardHeader>
         <CardTitle>{initialValues ? 'Update Event' : 'Create Event'}</CardTitle>
       </CardHeader>
-      <form
-        onSubmit={handleSubmit((data) => {
-          onSubmit(data)
-          reset()
-        })}
-      >
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         <CardContent className='space-y-4'>
           {['title', 'description', 'date', 'location'].map((field) => (
             <div key={field}>
@@ -59,7 +77,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialValues }) => {
                   field === 'description' ? (
                     <Textarea
                       {...inputField}
-                      placeholder={field}
+                      placeholder={`Enter ${field}`}
                       className={
                         errors[field as keyof EventFormValues]
                           ? 'border-red-500'
@@ -70,7 +88,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialValues }) => {
                     <Input
                       {...inputField}
                       type={field === 'date' ? 'date' : 'text'}
-                      placeholder={field}
+                      placeholder={`Enter ${field}`}
                       className={
                         errors[field as keyof EventFormValues]
                           ? 'border-red-500'
@@ -91,7 +109,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialValues }) => {
         <CardFooter>
           <Button
             type='submit'
-            className='text-16 rounded-lg border  font-semibold text-white bg-blue-500 '
+            className='text-16 rounded-lg border font-semibold text-white bg-blue-500'
           >
             {initialValues ? 'Update Event' : 'Create Event'}
           </Button>

@@ -40,14 +40,5 @@ export type EventFormValues = {
   location: string
 }
 
-export interface getFormValues {
-  id: string
-  createdAt: Date
-  updatedAt: Date
-  title: string
-  description: string
-  date: Date
-  location: string
-  userId: string
-}
+
 
