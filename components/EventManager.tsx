@@ -74,7 +74,11 @@ const EventManager = () => {
   return (
     <div className='p-6 flex items-center flex-col'>
       <h1 className='text-2xl font-bold mb-4'>Event Manager</h1>
-      <EventForm onSubmit={handleCreateOrUpdate} initialValues={editingEvent} />
+      <EventForm
+        onSubmit={handleCreateOrUpdate}
+        initialValues={editingEvent}
+        key={editingEvent?.id || 'new-event'}
+      />
       <EventList
         events={events}
         onEdit={setEditingEvent}
