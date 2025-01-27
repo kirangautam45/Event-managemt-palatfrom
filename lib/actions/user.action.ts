@@ -34,6 +34,7 @@ export async function getCurrentUser() {
       return null
     }
 
+    console.log(user, 'get user Details')
     return user
   } catch (error) {
     console.error('Error fetching current user:', error)
