@@ -95,49 +95,49 @@ export const signUp = async ({
   }
 }
 
-export const signIn = async ({
-  email,
-  password,
-}: {
-  email: string
-  password: string
-}) => {
-  try {
-    if (!email || !password) {
-      throw new Error('Email and password are required.')
-    }
+// export const signIn = async ({
+//   email,
+//   password,
+// }: {
+//   email: string
+//   password: string
+// }) => {
+//   try {
+//     if (!email || !password) {
+//       throw new Error('Email and password are required.')
+//     }
 
-    // Find the user by email
-    const user = await prisma.user.findUnique({
-      where: { email },
-    })
+//     // Find the user by email
+//     const user = await prisma.user.findUnique({
+//       where: { email },
+//     })
 
-    if (!user) {
-      throw new Error('Invalid email or password.')
-    }
+//     if (!user) {
+//       throw new Error('Invalid email or password.')
+//     }
 
-    // Compare passwords
-    const isValid = await bcrypt.compare(password, user.password)
-    if (!isValid) {
-      throw new Error('Invalid email or password.')
-    }
+//     // Compare passwords
+//     const isValid = await bcrypt.compare(password, user.password)
+//     if (!isValid) {
+//       throw new Error('Invalid email or password.')
+//     }
 
-    // Return user info (excluding password)
-    return {
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
-      error: null,
-    }
-  } catch (error) {
-    return {
-      success: false,
-      user: null,
-      error:
-        error instanceof Error ? error.message : 'An unexpected error occurred',
-    }
-  }
-}
+//     // Return user info (excluding password)
+//     return {
+//       success: true,
+//       user: {
+//         id: user.id,
+//         email: user.email,
+//         role: user.role,
+//       },
+//       error: null,
+//     }
+//   } catch (error) {
+//     return {
+//       success: false,
+//       user: null,
+//       error:
+//         error instanceof Error ? error.message : 'An unexpected error occurred',
+//     }
+//   }
+// }
